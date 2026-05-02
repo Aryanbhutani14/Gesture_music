@@ -8,14 +8,51 @@
 </head>
 <body>
 
-  <h1>Gesture Music Chord Player</h1>
+  <!-- Webcam Background -->
 
-<video id="webcam" autoplay playsinline></video> <canvas id="canvas"></canvas>
+<video id="webcam" autoplay playsinline></video>
 
-  <div class="circle left" id="noteCircle"></div>
-  <div class="circle right" id="chordCircle"></div>
+  <!-- Canvas for hand tracking -->
 
-  <div id="currentChord">C maj</div>
+<canvas id="canvas"></canvas>
+
+  <!-- Main UI Container -->
+
+  <div class="app">
+
+```
+<!-- Title -->
+<h1 class="title">Gesture Music App</h1>
+
+<!-- Circles Container -->
+<div class="circles">
+
+  <!-- Left Circle (Notes) -->
+  <div class="circle left" id="noteCircle">
+    <div class="label">NOTES</div>
+  </div>
+
+  <!-- Right Circle (Chord Types) -->
+  <div class="circle right" id="chordCircle">
+    <div class="label">CHORD</div>
+  </div>
+
+</div>
+
+<!-- Current Chord Display -->
+<div id="currentChord" class="chord-display">
+  C maj
+</div>
+```
+
+  </div>
+
+  <!-- Instructions -->
+
+  <div class="instructions">
+    Move LEFT hand → Select Note<br>
+    Move RIGHT hand → Select Chord
+  </div>
 
   <!-- Libraries -->
 
@@ -25,7 +62,7 @@
 
   <script src="https://unpkg.com/tone"></script>
 
-  <!-- Your files -->
+  <!-- Your JS -->
 
   <script src="js/chordEngine.js"></script>
 
