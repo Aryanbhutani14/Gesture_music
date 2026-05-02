@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gesture Music App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Gesture Music Chord Player</h1>
+
+<video id="webcam" autoplay playsinline></video> <canvas id="canvas"></canvas>
+
+  <div class="circle left" id="noteCircle"></div>
+  <div class="circle right" id="chordCircle"></div>
+
+  <div id="currentChord">C maj</div>
+
+  <!-- Libraries -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
+
+  <script src="https://unpkg.com/tone"></script>
+
+  <!-- Your files -->
+
+  <script src="js/chordEngine.js"></script>
+
+  <script src="js/ui.js"></script>
+
+  <script src="js/handTracking.js"></script>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
