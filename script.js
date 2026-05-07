@@ -1,26 +1,34 @@
 const video = document.getElementById("webcam");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-// Start webcam
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Current state
+let currentNote = "C";
+let currentType = "maj";
+let lastPlayed = "";
+
+// Tone.js
+const synth = new Tone.PolySynth().toDestination();
+
+function playChord(note, type) {
+const notes = getChordNotes(note, type);
+
+const chordKey = note + type;
+if (chordKey === lastPlayed) return;
+
+lastPlayed = chordKey;
+
+synth.triggerAttackRelease(notes, "1n");
+
+document.getElementById("currentChord").innerText =
+note + " " + type;
+}
+
+// Webcam setup
 navigator.mediaDevices.getUserMedia({ video: true })
 .then(stream => {
 video.srcObject = stream;
 });
-
-// Placeholder variables
-let currentNote = "C";
-let currentType = "maj";
-
-// Simple Tone.js setup
-const synth = new Tone.PolySynth().toDestination();
-
-function playChord() {
-const chordMap = {
-maj: ["C4", "E4", "G4"],
-min: ["C4", "Eb4", "G4"]
-};
-
-synth.triggerAttackRelease(chordMap[currentType], "1n");
-
-document.getElementById("currentChord").innerText =
-currentNote + " " + currentType;
-}
