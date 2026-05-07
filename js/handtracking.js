@@ -10,38 +10,48 @@ minDetectionConfidence: 0.7,
 minTrackingConfidence: 0.7
 });
 
+// CAMERA
 const camera = new Camera(video, {
 onFrame: async () => {
 await hands.send({ image: video });
 },
-width: 640,
-height: 480
+width: 1280,
+height: 720
 });
 
 camera.start();
 
+// RESULTS
 hands.onResults(results => {
+
 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 if (!results.multiHandLandmarks) return;
 
 results.multiHandLandmarks.forEach((landmarks, index) => {
-const finger = landmarks[8];
 
 ```
-const x = finger.x * canvas.width;
+const finger = landmarks[8];
+
+// MIRROR X
+const x = (1 - finger.x) * canvas.width;
 const y = finger.y * canvas.height;
 
-// Draw cursor
+// DRAW CURSOR
 ctx.beginPath();
-ctx.arc(x, y, 10, 0, 2 * Math.PI);
-ctx.fillStyle = index === 0 ? "orange" : "blue";
+ctx.arc(x, y, 18, 0, Math.PI * 2);
+
+ctx.fillStyle = index === 0 ? "#ff8800" : "#00aaff";
+
 ctx.fill();
 
-// Detect circle interaction
+// DETECT NOTE
 if (index === 0) {
   currentNote = detectNote(x, y);
-} else {
+}
+
+// DETECT CHORD TYPE
+else {
   currentType = detectChordType(x, y);
 }
 ```
@@ -49,4 +59,5 @@ if (index === 0) {
 });
 
 playChord(currentNote, currentType);
+
 });

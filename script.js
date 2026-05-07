@@ -2,33 +2,53 @@ const video = document.getElementById("webcam");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
+// FULLSCREEN CANVAS
+function resizeCanvas() {
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+}
 
-// Current state
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+// CURRENT STATE
 let currentNote = "C";
 let currentType = "maj";
 let lastPlayed = "";
 
-// Tone.js
-const synth = new Tone.PolySynth().toDestination();
+// AUDIO
+const synth = new Tone.PolySynth(Tone.Synth).toDestination();
 
+// REQUIRED FOR BROWSER AUDIO
+document.body.addEventListener("click", async () => {
+await Tone.start();
+console.log("Audio ready");
+});
+
+// PLAY CHORD
 function playChord(note, type) {
+
 const notes = getChordNotes(note, type);
 
-const chordKey = note + type;
-if (chordKey === lastPlayed) return;
+const current = note + type;
 
-lastPlayed = chordKey;
+if (current === lastPlayed) return;
 
-synth.triggerAttackRelease(notes, "1n");
+lastPlayed = current;
+
+synth.triggerAttackRelease(notes, "2n");
 
 document.getElementById("currentChord").innerText =
 note + " " + type;
 }
 
-// Webcam setup
-navigator.mediaDevices.getUserMedia({ video: true })
+// START WEBCAM
+navigator.mediaDevices.getUserMedia({
+video: {
+width: 1280,
+height: 720
+}
+})
 .then(stream => {
 video.srcObject = stream;
 });
