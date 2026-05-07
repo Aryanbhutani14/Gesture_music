@@ -1,54 +1,80 @@
-const video = document.getElementById("webcam");
+// MAIN — audio context, state, and chord playback
+
+const video  = document.getElementById("webcam");
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const ctx    = canvas.getContext("2d");
 
-// FULLSCREEN CANVAS
+// Match canvas to viewport
 function resizeCanvas() {
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
 }
-
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-// CURRENT STATE
-let currentNote = "C";
-let currentType = "maj";
-let lastPlayed = "";
+// ─── State ────────────────────────────────────────────────────────────────────
 
-// AUDIO
-const synth = new Tone.PolySynth(Tone.Synth).toDestination();
+let currentNote      = "C";
+let currentChordType = "maj";
+let lastPlayedKey    = "";
 
-// REQUIRED FOR BROWSER AUDIO
-document.body.addEventListener("click", async () => {
-await Tone.start();
-console.log("Audio ready");
-});
+// ─── Audio ────────────────────────────────────────────────────────────────────
 
-// PLAY CHORD
+let synth = null;
+let audioStarted = false;
+
+async function startAudio() {
+    if (audioStarted) return;
+    audioStarted = true;
+
+    // Hide the start overlay
+    const overlay = document.getElementById("startOverlay");
+    if (overlay) overlay.classList.add("hidden");
+
+    await Tone.start();
+
+    synth = new Tone.PolySynth(Tone.Synth, {
+        oscillator: { type: "triangle" },
+        envelope: {
+            attack:  0.05,
+            decay:   0.3,
+            sustain: 0.4,
+            release: 1.2
+        }
+    }).toDestination();
+
+    synth.set({ volume: -6 });
+
+    console.log("Audio ready ✅");
+
+    // Play a welcome chord so the user knows audio is working
+    playChord("C", "maj");
+}
+
+// Audio requires a user gesture — click or tap anywhere to start
+document.body.addEventListener("click",  startAudio, { once: true });
+document.body.addEventListener("touchstart", startAudio, { once: true });
+
+// ─── Chord playback ───────────────────────────────────────────────────────────
+
+// Called by handTracking whenever note or chord type changes
+function triggerChord() {
+    playChord(currentNote, currentChordType);
+}
+
 function playChord(note, type) {
+    if (!synth) return;
 
-const notes = getChordNotes(note, type);
+    const key = note + "_" + type;
+    if (key === lastPlayedKey) return;   // same chord, skip
+    lastPlayedKey = key;
 
-const current = note + type;
+    const notes = getChordNotes(note, type);
 
-if (current === lastPlayed) return;
+    // Release any held notes first, then play new chord
+    synth.releaseAll();
+    synth.triggerAttackRelease(notes, "2n");
 
-lastPlayed = current;
-
-synth.triggerAttackRelease(notes, "2n");
-
-document.getElementById("currentChord").innerText =
-note + " " + type;
+    // Update display
+    document.getElementById("currentChord").innerText = note + " " + type;
 }
-
-// START WEBCAM
-navigator.mediaDevices.getUserMedia({
-video: {
-width: 1280,
-height: 720
-}
-})
-.then(stream => {
-video.srcObject = stream;
-});

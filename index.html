@@ -1,76 +1,75 @@
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Gesture Music App</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Gesture Music App</title>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-  <!-- Webcam Background -->
+    <!-- CAMERA -->
+    <video id="webcam" autoplay playsinline muted></video>
 
-<video id="webcam" autoplay playsinline></video>
+    <!-- HAND TRACKING OVERLAY -->
+    <canvas id="canvas"></canvas>
 
-  <!-- Canvas for hand tracking -->
+    <!-- CLICK TO START OVERLAY -->
+    <div id="startOverlay">
+        <div class="start-box">
+            <div class="start-icon">🎵</div>
+            <h2>Gesture Music App</h2>
+            <p>Click anywhere to enable audio &amp; camera</p>
+        </div>
+    </div>
 
-<canvas id="canvas"></canvas>
+    <!-- MAIN APP -->
+    <div class="app">
 
-  <!-- Main UI Container -->
+        <!-- TITLE -->
+        <h1 class="title">Gesture Music App</h1>
 
-  <div class="app">
+        <!-- INSTRUCTIONS -->
+        <div class="instructions">
+            Move <span class="hand-left">LEFT hand</span> → Select Note &nbsp;|&nbsp;
+            Move <span class="hand-right">RIGHT hand</span> → Select Chord
+        </div>
 
-```
-<!-- Title -->
-<h1 class="title">Gesture Music App</h1>
+        <!-- LEFT WHEEL — NOTES -->
+        <div class="wheel-container left-wheel">
+            <div class="wheel-title">NOTES</div>
+            <svg class="wheel" id="leftWheelSvg" viewBox="0 0 400 400">
+                <!-- Built dynamically by buildNoteWheel() in ui.js -->
+            </svg>
+        </div>
 
-<!-- Circles Container -->
-<div class="circles">
+        <!-- RIGHT WHEEL — CHORDS -->
+        <div class="wheel-container right-wheel">
+            <div class="wheel-title">CHORD</div>
+            <svg class="wheel" id="rightWheelSvg" viewBox="0 0 400 400">
+                <!-- Built dynamically by buildWheel() in ui.js -->
+            </svg>
+        </div>
 
-  <!-- Left Circle (Notes) -->
-  <div class="circle left" id="noteCircle">
-    <div class="label">NOTES</div>
-  </div>
+        <!-- CURRENT CHORD DISPLAY -->
+        <div id="currentChord" class="chord-display">
+            C maj
+        </div>
 
-  <!-- Right Circle (Chord Types) -->
-  <div class="circle right" id="chordCircle">
-    <div class="label">CHORD</div>
-  </div>
+    </div>
 
-</div>
+    <!-- LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1640029074/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/tone@14/build/Tone.js"></script>
 
-<!-- Current Chord Display -->
-<div id="currentChord" class="chord-display">
-  C maj
-</div>
-```
-
-  </div>
-
-  <!-- Instructions -->
-
-  <div class="instructions">
-    Move LEFT hand → Select Note<br>
-    Move RIGHT hand → Select Chord
-  </div>
-
-  <!-- Libraries -->
-
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
-
-  <script src="https://unpkg.com/tone"></script>
-
-  <!-- Your JS -->
-
-  <script src="js/chordEngine.js"></script>
-
-  <script src="js/ui.js"></script>
-
-  <script src="js/handTracking.js"></script>
-
-  <script src="script.js"></script>
+    <!-- APP SCRIPTS (order matters) -->
+    <script src="js/chordEngine.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="script.js"></script>
+    <script src="js/handTracking.js"></script>
 
 </body>
+
 </html>
